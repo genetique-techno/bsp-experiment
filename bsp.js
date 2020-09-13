@@ -17,12 +17,18 @@
     // 1 if the line is in back of the splitline
     // -2 if the line needed to be split
 
+function slopePartials ({ p1, p2 }) {
+  return {
+    dx: p2.x - p1.x,
+    dy: p2.y - p1.y,
+  };
+}
+
 // Determines if a point is on a line, or which side of the line it is one
-// 0: front, 1: back, -1: colinear
-function pointSide(line, [x, y]) {
+// 1: front, -1: back, 0: colinear
+function pointSide (line, { x, y }) {
   // differentials for the line itself (p2 - p1)
-  const ldx = line.p2.x - line.p1.x;
-  const ldy = line.p2.y - line.p1.y;
+  const { dx: ldx, dy: ldy } = slopePartials(line);
 
   // differentials between point and line.p1
   const dx = line.p1.x - x;
@@ -32,20 +38,30 @@ function pointSide(line, [x, y]) {
   const left = ldy * dx;
   const right = ldx * dy;
 
-  if (left === right) return -1; // colinear
-  if (left > right) return 0; // front
-  if (right > left) return 1; // back
+  if (left === right) return 0; // colinear
+  if (left > right) return 1; // front
+  if (right > left) return -1; // back
 }
 
-// 0: colinear|front, 1: back, -2: split
-function lineSide(line1, line2) {
-  const line1Slope = (line1.p2[1] - line1.p1[1]) / (line1.p2[0] - line1.p1[0]);
-  const line1Intecept = line1.p1[1] - line1Slope * line1.p1[0];
+// 0: front, 1: back, -2: split
+function lineSide (divLine, line) {
+  const point1Side = pointSide(divLine, line.p1);
+  const point2Side = pointSide(divLine, line.p2);
+  const { dx: ldx, dy: ldy } = slopePartials(divLine);
+  const { dx, dy } = slopePartials(line);
 
-  console.log(line1Slope, line1Intecept)
-  // determine if line2 is in front or colinear (0)
-  // determine if line2 is behind (1)
-  // determine if line2 is split by line1 (-2)
+  // if line is colinear, both sides will be 0
+  if (point1Side === 0 && point2Side ===0) {
+    // check if direction is the same, asign to front if true, back if false
+    if (Math.sign(dx) === Math.sign(ldx) && Math.sign(dy) === Math.sign(ldy)) return 0; 
+    return 1;
+  }
+  // if line is front, side total will be > 0
+  if (point1Side + point2Side > 0) return 0;
+  // if line is back, side total will be < 0
+  if (point1Side + point2Side < 0) return 1;
+  // if line must be split, side totals will be opposites
+  if (point1Side === point2Side * - 1) return -2;
 }
 
 module.exports = {
