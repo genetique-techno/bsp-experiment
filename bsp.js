@@ -26,17 +26,17 @@ function slopePartials ({ p1, p2 }) {
 
 // Determines if a point is on a line, or which side of the line it is one
 // 1: front, -1: back, 0: colinear
-function pointSide (line, { x, y }) {
-  // differentials for the line itself (p2 - p1)
-  const { dx: ldx, dy: ldy } = slopePartials(line);
+function pointSide (divLine, { x, y }) {
+  // // differentials for the line itself (p2 - p1)
+  // const { dx: ldx, dy: ldy } = slopePartials(line);
 
   // differentials between point and line.p1
-  const dx = line.p1.x - x;
-  const dy = line.p1.y - y; 
+  const dx = divLine.pt.x - x;
+  const dy = divLine.pt.y - y; 
 
   // areas of differential rectangles
-  const left = ldy * dx;
-  const right = ldx * dy;
+  const left = divLine.dy * dx;
+  const right = divLine.dx * dy;
 
   if (left === right) return 0; // colinear
   if (left > right) return 1; // front
@@ -44,16 +44,16 @@ function pointSide (line, { x, y }) {
 }
 
 // 0: front, 1: back, -2: split
-function lineSide (divLine, line) {
-  const point1Side = pointSide(divLine, line.p1);
-  const point2Side = pointSide(divLine, line.p2);
-  const { dx: ldx, dy: ldy } = slopePartials(divLine);
-  const { dx, dy } = slopePartials(line);
+function lineSide (divLine, worldLine) {
+  const point1Side = pointSide(divLine, worldLine.p1);
+  const point2Side = pointSide(divLine, worldLine.p2);
+  // const { dx: ldx, dy: ldy } = slopePartials(divLine);
+  const { dx, dy } = slopePartials(worldLine);
 
   // if line is colinear, both sides will be 0
   if (point1Side === 0 && point2Side ===0) {
     // check if direction is the same, asign to front if true, back if false
-    if (Math.sign(dx) === Math.sign(ldx) && Math.sign(dy) === Math.sign(ldy)) return 0; 
+    if (Math.sign(dx) === Math.sign(divLine.dx) && Math.sign(dy) === Math.sign(divLine.dy)) return 0; 
     return 1;
   }
   // if line is front, side total will be > 0
