@@ -18,13 +18,13 @@ describe("bsp", function () {
         p2: { x: 2, y: 2 },
       };
 
-      strictEqual(pointSide([1, 1], line), -1, "is on the line");
-      strictEqual(pointSide([5, 5], line), -1, "is on the line");
-      strictEqual(pointSide([-1, -1], line), -1, "is on the line");
-      strictEqual(pointSide([0, 1], line), 0, "is in front");
-      strictEqual(pointSide([0, 4], line), 0, "is in front");
-      strictEqual(pointSide([1, 0], line), 1, "is in back");
-      strictEqual(pointSide([1, -2], line), 1, "is in back");
+      strictEqual(pointSide(line, [1, 1]), -1, "is on the line");
+      strictEqual(pointSide(line, [5, 5]), -1, "is on the line");
+      strictEqual(pointSide(line, [-1, -1]), -1, "is on the line");
+      strictEqual(pointSide(line, [0, 1]), 0, "is in front");
+      strictEqual(pointSide(line, [0, 4]), 0, "is in front");
+      strictEqual(pointSide(line, [1, 0]), 1, "is in back");
+      strictEqual(pointSide(line, [1, -2]), 1, "is in back");
     });
 
     it ("should return the expected values for a negative slope line", function () {
@@ -33,13 +33,13 @@ describe("bsp", function () {
         p2: { x: 0, y: 0 },
       };
 
-      strictEqual(pointSide([1, 1], line), -1, "is on the line");
-      strictEqual(pointSide([5, 5], line), -1, "is on the line");
-      strictEqual(pointSide([-1, -1], line), -1, "is on the line");
-      strictEqual(pointSide([1, 0], line), 0, "is in front");
-      strictEqual(pointSide([1, -2], line), 0, "is in front");
-      strictEqual(pointSide([0, 1], line), 1, "is in back");
-      strictEqual(pointSide([0, 4], line), 1, "is in back");
+      strictEqual(pointSide(line, [1, 1]), -1, "is on the line");
+      strictEqual(pointSide(line, [5, 5]), -1, "is on the line");
+      strictEqual(pointSide(line, [-1, -1]), -1, "is on the line");
+      strictEqual(pointSide(line, [1, 0]), 0, "is in front");
+      strictEqual(pointSide(line, [1, -2]), 0, "is in front");
+      strictEqual(pointSide(line, [0, 1]), 1, "is in back");
+      strictEqual(pointSide(line, [0, 4]), 1, "is in back");
     });
 
     it ("should return the expected values for a horizontal line", function () {
@@ -48,13 +48,13 @@ describe("bsp", function () {
         p2: { x: 4, y: 0 },
       };
 
-      strictEqual(pointSide([1, 0], line), -1, "is on the line");
-      strictEqual(pointSide([5, 0], line), -1, "is on the line");
-      strictEqual(pointSide([-1, 0], line), -1, "is on the line");
-      strictEqual(pointSide([1, 1], line), 0, "is in front");
-      strictEqual(pointSide([-1, 2], line), 0, "is in front");
-      strictEqual(pointSide([-1, -1], line), 1, "is in back");
-      strictEqual(pointSide([3, -4], line), 1, "is in back");
+      strictEqual(pointSide(line, [1, 0]), -1, "is on the line");
+      strictEqual(pointSide(line, [5, 0]), -1, "is on the line");
+      strictEqual(pointSide(line, [-1, 0]), -1, "is on the line");
+      strictEqual(pointSide(line, [1, 1]), 0, "is in front");
+      strictEqual(pointSide(line, [-1, 2]), 0, "is in front");
+      strictEqual(pointSide(line, [-1, -1]), 1, "is in back");
+      strictEqual(pointSide(line, [3, -4]), 1, "is in back");
     });
   });
 

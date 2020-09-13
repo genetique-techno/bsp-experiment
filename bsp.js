@@ -17,8 +17,9 @@
     // 1 if the line is in back of the splitline
     // -2 if the line needed to be split
 
+// Determines if a point is on a line, or which side of the line it is one
 // 0: front, 1: back, -1: colinear
-function pointSide([x, y], line) {
+function pointSide(line, [x, y]) {
   // differentials for the line itself (p2 - p1)
   const ldx = line.p2.x - line.p1.x;
   const ldy = line.p2.y - line.p1.y;
