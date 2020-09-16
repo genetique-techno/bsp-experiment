@@ -8,9 +8,9 @@ const wl = ([p1x, p1y], [p2x, p2y]) => new WorldLine({
   p2: pt([p2x, p2y]),
 });
 
-describe("bsp", function () {
+describe("utils", function () {
   describe("pointSide", function () {
-    const { pointSide } = require("../bsp");
+    const { pointSide } = require("../utils");
     
     it("should return the expected values for a positive slope line", function () {
       const line = new DivLine({ x: 0, y: 0 }, { x: 2, y: 2 });
@@ -50,7 +50,7 @@ describe("bsp", function () {
   });
 
   describe("lineSide", function () {
-    const { lineSide } = require("../bsp");
+    const { lineSide } = require("../utils");
     const divLine = new DivLine({ x: 0, y: 0 }, { x: 2, y: 2 });
     
     it("colinear in same direction", function () {
