@@ -1,6 +1,6 @@
 // stores information about floor, ceiling textures, height, lighting & tags
 class Sector {
-  constructor ({
+  constructor({
     floorHeight,
     ceilingHeight,
     floorFlat,
@@ -21,7 +21,7 @@ class Sector {
 
 // stores information about a line's side textures and textureOffsets
 class WorldSide {
-  constructor ({
+  constructor({
     firstRow,
     firstColumn,
     topTexture,
@@ -42,7 +42,7 @@ class WorldSide {
 
 // stores information about a line
 class WorldLine {
-  constructor ({
+  constructor({
     p1,
     p2,
     flags,
@@ -50,6 +50,8 @@ class WorldLine {
   }) {
     this.p1 = p1;
     this.p2 = p2;
+    this.dx = p2.x - p1.x;
+    this.dy = p2.y - p1.y;
     this.flags = flags;
     this.sides = sides; // two sides
   }
@@ -57,7 +59,7 @@ class WorldLine {
 
 // a line used in dividing up the map data during the bsp process
 class DivLine {
-  constructor (pt, pt2) {
+  constructor(pt, pt2) {
     this.pt = pt;
     this.dx = pt2.x - pt.x;
     this.dy = pt2.y - pt.y;

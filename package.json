@@ -4,7 +4,8 @@
   "description": "",
   "main": "bsp.js",
   "scripts": {
-    "test": "nodemon -x 'mocha test'"
+    "test": "nodemon -x 'mocha test'",
+    "lint": "nodemon -x 'eslint .'"
   },
   "repository": {
     "type": "git",
