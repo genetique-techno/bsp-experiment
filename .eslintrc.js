@@ -14,5 +14,7 @@ module.exports = {
     'global-require': 'off',
     'max-classes-per-file': 'off',
     'max-len': 'off',
+    'no-plusplus': 'off',
+    'no-param-reassign': 'off',
   },
 };

@@ -44,6 +44,7 @@ function lineSide(divLine, worldLine) {
     if (Math.sign(worldLine.dx) === Math.sign(divLine.dx) && Math.sign(worldLine.dy) === Math.sign(divLine.dy)) return 0;
     return 1;
   }
+
   // if line is front, side total will be > 0
   if (point1Side + point2Side > 0) return 0;
   // if line is back, side total will be < 0

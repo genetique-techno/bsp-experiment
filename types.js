@@ -40,6 +40,15 @@ class WorldSide {
   }
 }
 
+// a line used in dividing up the map data during the bsp process
+class DivLine {
+  constructor(pt, pt2) {
+    this.pt = pt;
+    this.dx = pt2.x - pt.x;
+    this.dy = pt2.y - pt.y;
+  }
+}
+
 // stores information about a line
 class WorldLine {
   constructor({
@@ -55,14 +64,17 @@ class WorldLine {
     this.flags = flags;
     this.sides = sides; // two sides
   }
+
+  toDivLine() {
+    return new DivLine(this.p1, this.p2);
+  }
 }
 
-// a line used in dividing up the map data during the bsp process
-class DivLine {
-  constructor(pt, pt2) {
-    this.pt = pt;
-    this.dx = pt2.x - pt.x;
-    this.dy = pt2.y - pt.y;
+class BSPNode {
+  constructor(lines = [], left, right) {
+    this.lines = lines;
+    this.left = left;
+    this.right = right;
   }
 }
 
@@ -71,4 +83,5 @@ module.exports = {
   WorldLine,
   WorldSide,
   Sector,
+  BSPNode,
 };
