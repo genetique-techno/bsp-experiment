@@ -1,5 +1,5 @@
 const { describe, it } = require('mocha');
-const { strictEqual } = require('assert');
+const { deepStrictEqual, strictEqual } = require('assert');
 const { wl, dl } = require('./helpers');
 
 describe('bsp', () => {
@@ -66,6 +66,74 @@ describe('bsp', () => {
       ];
       const divLine = dl([0, 0], [1, -2]);
       strictEqual(evaluateSplit(worldLines, divLine), 10);
+    });
+  });
+
+  describe('executeSplit', () => {
+    const { executeSplit } = require('../bsp');
+
+    it('should sort lines into the correct lists', () => {
+      const worldLines = [
+        wl([0, 0], [0, 1]),
+        wl([0, 1], [-1, 1]),
+        wl([-1, 1], [-2, 0]),
+        wl([-2, 0], [-2, -1]),
+        wl([-2, -1], [-1, -2]),
+        wl([-1, -2], [0, -2]),
+        wl([0, -2], [0, -1]),
+        wl([0, -1], [-1, -1]),
+        wl([-1, -1], [-1, 0]),
+        wl([-1, 0], [0, 0]),
+      ];
+      const divLine = dl([-1, 1], [-1, -2]);
+      const { front, back } = executeSplit(worldLines, divLine);
+
+      deepStrictEqual(front, [
+        wl([0, 0], [0, 1]),
+        wl([0, 1], [-1, 1]),
+        wl([-1, -2], [0, -2]),
+        wl([0, -2], [0, -1]),
+        wl([0, -1], [-1, -1]),
+        wl([-1, 0], [0, 0]),
+      ], 'front lines correct');
+
+      deepStrictEqual(back, [
+        wl([-1, 1], [-2, 0]),
+        wl([-2, 0], [-2, -1]),
+        wl([-2, -1], [-1, -2]),
+        wl([-1, -1], [-1, 0]),
+      ], 'back lines correct');
+    });
+
+    it('should sort the lines into the correct lists when splits happen', () => {
+      const worldLines = [
+        wl([0, 0], [0, 1]),
+        wl([0, 1], [-2, 0]),
+        wl([-2, 0], [-2, -1]),
+        wl([-2, -1], [0, -2]),
+        wl([0, -2], [0, -1]),
+        wl([0, -1], [-1, -1]),
+        wl([-1, -1], [-1, 0]),
+        wl([-1, 0], [0, 0]),
+      ];
+      const divLine = dl([-1, 1], [-1, -2]);
+      const { front, back } = executeSplit(worldLines, divLine);
+
+      deepStrictEqual(front, [
+        wl([0, 0], [0, 1]),
+        wl([0, 1], [-1, 0.5]),
+        wl([-1, -1.5], [0, -2]),
+        wl([0, -2], [0, -1]),
+        wl([0, -1], [-1, -1]),
+        wl([-1, 0], [0, 0]),
+      ], 'front lines correct');
+
+      deepStrictEqual(back, [
+        wl([-1, 0.5], [-2, 0]),
+        wl([-2, 0], [-2, -1]),
+        wl([-2, -1], [-1, -1.5]),
+        wl([-1, -1], [-1, 0]),
+      ], 'back lines correct');
     });
   });
 });

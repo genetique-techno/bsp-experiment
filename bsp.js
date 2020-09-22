@@ -1,5 +1,5 @@
 const { BSPNode } = require('./types');
-const { lineSide } = require('./utils');
+const { cutLine, lineSide } = require('./utils');
 
 // return a score for this split line
 function evaluateSplit(wls, dl) {
@@ -25,7 +25,31 @@ function evaluateSplit(wls, dl) {
   return grade;
 }
 
-function executeSplit() {}
+function executeSplit(wls, dl) {
+  // look at each wl and assign it to front list, back list, or cut it and assign each
+  // to their respective list
+  const { front, back } = wls.reduce((a, wl) => {
+    const side = lineSide(dl, wl);
+    switch (side) {
+      case 0:
+        a.front.push(wl);
+        break;
+      case 1:
+        a.back.push(wl);
+        break;
+      case -2:
+        const [f, b] = cutLine(dl, wl);
+        a.front.push(f);
+        a.back.push(b);
+        break;
+      default:
+        throw Error('executeSplit failed in an unexpected way');
+    }
+    return a;
+  }, { front: [], back: [] });
+
+  return { front, back };
+}
 
 function buildBSP(worldLines) {
   let bestScore = Infinity;
@@ -61,4 +85,5 @@ function buildBSP(worldLines) {
 module.exports = {
   buildBSP,
   evaluateSplit,
+  executeSplit,
 };

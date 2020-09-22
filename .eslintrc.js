@@ -16,5 +16,6 @@ module.exports = {
     'max-len': 'off',
     'no-plusplus': 'off',
     'no-param-reassign': 'off',
+    'no-case-declarations': 'off',
   },
 };
