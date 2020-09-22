@@ -51,30 +51,31 @@ function executeSplit(wls, dl) {
   return { front, back };
 }
 
-function buildBSP(worldLines) {
+function buildBSP(lines) {
   let bestScore = Infinity;
   let bestLine = null;
-  // loop through all worldLines
-  worldLines.forEach((wl) => {
+  // loop through all lines
+  lines.forEach((line) => {
     // evaluate the score result if using this line as the splitLine
-    const divLine = wl.toDivLine();
-    const score = evaluateSplit(worldLines, divLine, bestScore);
+    const divLine = line.toDivLine();
+    const score = evaluateSplit(lines, divLine, bestScore);
     if (score < bestScore) {
       bestScore = score;
-      bestLine = wl;
+      bestLine = line;
     }
   });
 
   // if nothing could be split it means all remaining lines are convex and this is a terminal node
   if (bestScore === Infinity) {
-    return new BSPNode();
+    return new BSPNode({ lines });
   }
 
   const divLine = bestLine.toDivLine();
-  // split worldLines into front and back lists
-  const { front, back } = executeSplit(worldLines, divLine);
 
-  const node = new BSPNode(worldLines);
+  // split lines into front and back lists
+  const { front, back } = executeSplit(lines, divLine);
+
+  const node = new BSPNode({ divLine });
   // recurse into front and back lists
   node.left = buildBSP(front);
   node.right = buildBSP(back);

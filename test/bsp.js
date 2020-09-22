@@ -1,6 +1,7 @@
 const { describe, it } = require('mocha');
 const { deepStrictEqual, strictEqual } = require('assert');
 const { wl, dl } = require('./helpers');
+const { BSPNode } = require('../types');
 
 describe('bsp', () => {
   describe('evaluateSplit', () => {
@@ -134,6 +135,60 @@ describe('bsp', () => {
         wl([-2, -1], [-1, -1.5]),
         wl([-1, -1], [-1, 0]),
       ], 'back lines correct');
+    });
+  });
+
+  describe('buildBSP', () => {
+    const { buildBSP } = require('../bsp');
+
+    it('should return the expected structure', () => {
+      const worldLines = [
+        wl([0, 0], [0, 1]),
+        wl([0, 1], [-2, 0]),
+        wl([-2, 0], [-2, -1]),
+        wl([-2, -1], [0, -2]),
+        wl([0, -2], [0, -1]),
+        wl([0, -1], [-1, -1]),
+        wl([-1, -1], [-1, 0]),
+        wl([-1, 0], [0, 0]),
+      ];
+      deepStrictEqual(buildBSP(worldLines), new BSPNode({
+        lines: null,
+        divLine: dl([0, -1], [-1, -1]),
+        left: new BSPNode({
+          lines: [
+            wl([-2, -1], [0, -2]),
+            wl([0, -2], [0, -1]),
+            wl([0, -1], [-1, -1]),
+          ],
+          divLine: null,
+          left: null,
+          right: null,
+        }),
+        right: new BSPNode({
+          lines: null,
+          divLine: dl([-1, 0], [0, 0]),
+          left: new BSPNode({
+            lines: [
+              wl([0, 0], [0, 1]),
+              wl([0, 1], [-2, 0]),
+              wl([-1, 0], [0, 0]),
+            ],
+            divLine: null,
+            left: null,
+            right: null,
+          }),
+          right: new BSPNode({
+            lines: [
+              wl([-2, 0], [-2, -1]),
+              wl([-1, -1], [-1, 0]),
+            ],
+            divLine: null,
+            left: null,
+            right: null,
+          }),
+        }),
+      }));
     });
   });
 });

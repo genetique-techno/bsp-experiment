@@ -54,15 +54,15 @@ class WorldLine {
   constructor({
     p1,
     p2,
-    flags,
-    sides = Array(2),
+    // flags,
+    // sides = Array(2),
   }) {
     this.p1 = p1;
     this.p2 = p2;
     this.dx = p2.x - p1.x;
     this.dy = p2.y - p1.y;
-    this.flags = flags;
-    this.sides = sides; // two sides
+    // this.flags = flags;
+    // this.sides = sides; // two sides
   }
 
   toDivLine() {
@@ -71,8 +71,9 @@ class WorldLine {
 }
 
 class BSPNode {
-  constructor(lines = [], left, right) {
+  constructor({ lines = null, divLine = null, left = null, right = null }) {
     this.lines = lines;
+    this.divLine = divLine;
     this.left = left;
     this.right = right;
   }

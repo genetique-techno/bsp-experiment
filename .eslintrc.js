@@ -17,5 +17,6 @@ module.exports = {
     'no-plusplus': 'off',
     'no-param-reassign': 'off',
     'no-case-declarations': 'off',
+    'object-curly-newline': 'off',
   },
 };
