@@ -17,37 +17,37 @@ const { WorldLine } = require('./types');
 // -2 if the line needed to be split
 
 // Determines if a point is on a line, or which side of the line it is one
-// 1: front, -1: back, 0: colinear
+// 1: right, -1: left, 0: colinear
 function pointSide(divLine, { x, y }) {
   // differentials between point and line.p1
   const dx = divLine.pt.x - x;
   const dy = divLine.pt.y - y;
 
   // areas of differential rectangles
-  const left = divLine.dy * dx;
-  const right = divLine.dx * dy;
+  const right = divLine.dy * dx;
+  const left = divLine.dx * dy;
 
   if (left === right) return 0; // colinear
-  if (left > right) return 1; // front
-  if (right > left) return -1; // back
+  if (left > right) return 1; // right
+  if (right > left) return -1; // left
   return Error("shouldn't happen");
 }
 
-// 0: front, 1: back, -2: split
+// 0: right, 1: left, -2: split
 function lineSide(divLine, worldLine) {
   const point1Side = pointSide(divLine, worldLine.p1);
   const point2Side = pointSide(divLine, worldLine.p2);
 
   // if line is colinear, both sides will be 0
   if (point1Side === 0 && point2Side === 0) {
-    // check if direction is the same, asign to front if true, back if false
+    // check if direction is the same, assign to right if true, left if false
     if (Math.sign(worldLine.dx) === Math.sign(divLine.dx) && Math.sign(worldLine.dy) === Math.sign(divLine.dy)) return 0;
     return 1;
   }
 
-  // if line is front, side total will be > 0
+  // if line is right, side total will be > 0
   if (point1Side + point2Side > 0) return 0;
-  // if line is back, side total will be < 0
+  // if line is left, side total will be < 0
   if (point1Side + point2Side < 0) return 1;
   // if line must be split, side totals will be opposites
   if (point1Side === point2Side * -1) return -2;
@@ -66,8 +66,8 @@ function cutLine(dl, wl) {
   const p1Side = pointSide(dl, wl.p1);
 
   let result = [
-    new WorldLine({ ...wl, p2: { x: xIntr, y: yIntr } }),
     new WorldLine({ ...wl, p1: { x: xIntr, y: yIntr } }),
+    new WorldLine({ ...wl, p2: { x: xIntr, y: yIntr } }),
   ];
   if (p1Side === -1) {
     result = result.reverse();

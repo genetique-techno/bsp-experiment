@@ -10,45 +10,51 @@ function evaluateSplit(wls, dl) {
     switch (side) {
       case 0:
         a.frontCount++;
+        console.log(wl)
         break;
       case 1:
         a.backCount++;
         break;
-      default:
-        a.splits++;
+      case -2:
+        a.frontCount++;
+        a.backCount++;
+        a.split++;
+        break;
     }
     return a;
   }, { frontCount: 0, backCount: 0, splits: 0 });
 
   if (frontCount === 0 || backCount === 0) return Infinity;
-  const grade = Math.max(frontCount, backCount) + splits * 8;
+  const newLines = frontCount + backCount - wls.length;
+  const grade = Math.max(frontCount, backCount) + newLines * 8;
+
   return grade;
 }
 
 function executeSplit(wls, dl) {
-  // look at each wl and assign it to front list, back list, or cut it and assign each
+  // look at each wl and assign it to right list, left list, or cut it and assign each
   // to their respective list
-  const { front, back } = wls.reduce((a, wl) => {
+  const { left, right } = wls.reduce((a, wl) => {
     const side = lineSide(dl, wl);
     switch (side) {
       case 0:
-        a.front.push(wl);
+        a.right.push(wl);
         break;
       case 1:
-        a.back.push(wl);
+        a.left.push(wl);
         break;
       case -2:
-        const [f, b] = cutLine(dl, wl);
-        a.front.push(f);
-        a.back.push(b);
+        const [l, r] = cutLine(dl, wl);
+        a.right.push(r);
+        a.left.push(l);
         break;
       default:
         throw Error('executeSplit failed in an unexpected way');
     }
     return a;
-  }, { front: [], back: [] });
+  }, { left: [], right: [] });
 
-  return { front, back };
+  return { left, right };
 }
 
 function buildBSP(lines) {
@@ -59,7 +65,10 @@ function buildBSP(lines) {
     // evaluate the score result if using this line as the splitLine
     const divLine = line.toDivLine();
     const score = evaluateSplit(lines, divLine, bestScore);
-    if (score < bestScore) {
+    console.log(divLine)
+    console.log("score: ", score)
+    console.log("")
+    if (score > bestScore) {
       bestScore = score;
       bestLine = line;
     }
@@ -72,13 +81,13 @@ function buildBSP(lines) {
 
   const divLine = bestLine.toDivLine();
 
-  // split lines into front and back lists
-  const { front, back } = executeSplit(lines, divLine);
+  // split lines into right and left lists
+  const { right, left } = executeSplit(lines, divLine);
 
   const node = new BSPNode({ divLine });
   // recurse into front and back lists
-  node.left = buildBSP(front);
-  node.right = buildBSP(back);
+  // node.left = buildBSP(left);
+  // node.right = buildBSP(right);
 
   return node;
 }
